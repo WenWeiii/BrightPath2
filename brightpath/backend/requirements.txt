@@ -1,0 +1,4 @@
+flask==2.2.5          //web framework for building APIs/web apps
+joblib==1.3.2         //saves/loads ML models 
+numpy==1.26.4         //numerical computing library for data manipulation and ML
+scikit-learn==1.4.2   //machine learning algorithms

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BrightPath Career Mini Games</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <aside id="overlay" class="panel">
+        <h1>BrightPath Career Mini Games</h1>
+        <p>KidZania-style role exploration in lightweight 3D.</p>
+
+        <div class="controls">
+          <button data-game="software">Software Engineering</button>
+          <button data-game="data">Data Analytics</button>
+          <button data-game="cyber">Cybersecurity</button>
+          <button data-game="pm">Product Manager</button>
+          <button data-game="ux">UX Designer</button>
+          <button data-game="cloud">Cloud Engineer</button>
+        </div>
+
+        <div class="status">
+          <h2>Mission</h2>
+          <p id="missionText">Choose a role to begin.</p>
+          <h2>Feedback</h2>
+          <p id="feedbackText">Click objects in the 3D scene.</p>
+          <h2>Total Score</h2>
+          <p id="scoreText">0</p>
+          <h2>Progression</h2>
+          <p id="progressText">Unlock new careers by scoring points.</p>
+          <h2>Badges</h2>
+          <ul id="badgesList" class="badgesList">
+            <li>No badges yet. Keep playing!</li>
+          </ul>
+          <label class="soundToggle" for="soundToggleInput">
+            <input id="soundToggleInput" type="checkbox" />
+            Enable badge sound
+          </label>
+          <button id="resetProgressBtn" type="button">Reset Progress</button>
+        </div>
+      </aside>
+
+      <div id="gameCanvas"></div>
+    </div>
+
+    <div id="badgeToast" class="badgeToast" aria-live="polite"></div>
+
+    <script type="module" src="./js/main.js"></script>
+  </body>
+</html>

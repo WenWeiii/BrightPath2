@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>BrightPath — Create Profile</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Create Your Student Profile</h1>
+
+      <form id="profile-form">
+        <label>Skills (comma-separated)</label>
+        <input id="skills" placeholder="e.g. python, sql, public speaking" />
+
+        <label>Interests (comma-separated)</label>
+        <input id="interests" placeholder="e.g. ai, healthcare, finance" />
+
+        <label>Education Level</label>
+        <select id="education">
+          <option value="highschool">High School</option>
+          <option value="bachelors" selected>Bachelor's</option>
+          <option value="masters">Master's</option>
+        </select>
+
+        <button type="submit">Get Recommendations</button>
+      </form>
+
+      <div id="results" class="results"></div>
+    </main>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>

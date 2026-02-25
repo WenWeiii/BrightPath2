@@ -1,0 +1,89 @@
+//Group Members: Shum Wen Wei, Woo Xin Ern
+//Group Name: Banana Milkshake
+//Project Name: BrightPath
+
+name: CI/CD (Build -> GCR -> Cloud Run)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  FRONTEND_IMAGE: gcr.io/${{ secrets.GCP_PROJECT }}/brightpath-frontend:${{ github.sha }}
+  BACKEND_IMAGE: gcr.io/${{ secrets.GCP_PROJECT }}/brightpath-backend:${{ github.sha }}
+  GCP_REGION: ${{ secrets.GCP_REGION }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install and build frontend (pre-deploy check)
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+
+      - name: Install and build backend (pre-deploy check)
+        run: |
+          cd backend
+          npm ci
+          npm run build
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Configure gcloud
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Build frontend image
+        run: |
+          docker build -t "$FRONTEND_IMAGE" frontend
+          docker push "$FRONTEND_IMAGE"
+
+      - name: Build backend image
+        run: |
+          docker build -t "$BACKEND_IMAGE" backend
+          docker push "$BACKEND_IMAGE"
+
+      - name: Deploy backend to Cloud Run
+        run: |
+          REGION="${GCP_REGION:-us-central1}"
+          gcloud run deploy brightpath-backend \
+            --image "$BACKEND_IMAGE" \
+            --region "$REGION" \
+            --platform managed --allow-unauthenticated
+
+      - name: Deploy frontend to Cloud Run
+        run: |
+          REGION="${GCP_REGION:-us-central1}"
+          gcloud run deploy brightpath-frontend \
+            --image "$FRONTEND_IMAGE" \
+            --region "$REGION" \
+            --platform managed --allow-unauthenticated
+
+      - name: Smoke test deployed frontend and /games route
+        run: |
+          REGION="${GCP_REGION:-us-central1}"
+          FRONTEND_URL="$(gcloud run services describe brightpath-frontend --region "$REGION" --format 'value(status.url)')"
+          curl -fsS "$FRONTEND_URL" > /dev/null
+          curl -fsS "$FRONTEND_URL/games" > /dev/null
+
+      - name: Smoke test deployed backend sensors endpoint
+        run: |
+          REGION="${GCP_REGION:-us-central1}"
+          BACKEND_URL="$(gcloud run services describe brightpath-backend --region "$REGION" --format 'value(status.url)')"
+          curl -fsS "$BACKEND_URL/sensors" > /dev/null

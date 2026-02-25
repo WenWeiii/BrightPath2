@@ -1,0 +1,8 @@
+ * Serving Flask app 'predict'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8085
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [25/Feb/2026 04:57:29] "POST /predict HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2026 04:57:41] "POST /predict HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2026 04:57:49] "POST /predict HTTP/1.1" 200 -

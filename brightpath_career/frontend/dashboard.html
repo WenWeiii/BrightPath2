@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BrightPath - Recommendations</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>BrightPath</h1>
+  </header>
+  <main class="container">
+    <div class="hero">
+      <div>
+        <h2>Career Recommendations</h2>
+        <p class="muted">Personalized matches and suggested learning resources based on your profile.</p>
+      </div>
+      <div class="controls">
+        <a class="btn secondary" href="index.html">Home</a>
+        <a class="btn" href="profile.html">Edit Profile</a>
+      </div>
+    </div>
+
+    <div id="results" class="results-offset"></div>
+  </main>
+  <footer class="footer">BrightPath</footer>
+  <script src="js/firebase-config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

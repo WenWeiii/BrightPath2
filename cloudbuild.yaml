@@ -1,0 +1,59 @@
+steps:
+  # Frontend: install, build, containerize and push
+  - name: 'gcr.io/cloud-builders/npm'
+    id: 'install-frontend'
+    dir: 'frontend'
+    args: ['install']
+  - name: 'gcr.io/cloud-builders/npm'
+    id: 'build-frontend'
+    dir: 'frontend'
+    args: ['run', 'build']
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build-frontend-image'
+    dir: 'frontend'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/brightpath-frontend:$SHORT_SHA', '.']
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'push-frontend-image'
+    args: ['push', 'gcr.io/$PROJECT_ID/brightpath-frontend:$SHORT_SHA']
+
+  # Backend: install, build image and push
+  - name: 'gcr.io/cloud-builders/npm'
+    id: 'install-backend'
+    dir: 'backend'
+    args: ['install']
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build-backend-image'
+    dir: 'backend'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/brightpath-backend:$SHORT_SHA', '.']
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'push-backend-image'
+    args: ['push', 'gcr.io/$PROJECT_ID/brightpath-backend:$SHORT_SHA']
+
+  # Deploy backend to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'deploy-backend'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud run deploy brightpath-backend \
+          --image gcr.io/$PROJECT_ID/brightpath-backend:$SHORT_SHA \
+          --region $_REGION --platform managed --allow-unauthenticated
+
+  # Deploy frontend to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'deploy-frontend'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud run deploy brightpath-frontend \
+          --image gcr.io/$PROJECT_ID/brightpath-frontend:$SHORT_SHA \
+          --region $_REGION --platform managed --allow-unauthenticated
+
+images:
+  - 'gcr.io/$PROJECT_ID/brightpath-frontend:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/brightpath-backend:$SHORT_SHA'
+
+substitutions:
+  _REGION: 'us-central1'
