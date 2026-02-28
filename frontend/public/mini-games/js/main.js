@@ -286,5 +286,5 @@ if (Array.isArray(storedBadges)) {
 
 renderBadges()
 ui.setScore(storedScore)         //sets the app’s current score to the value loaded from storage
-switchGame('software')           // Start with the first game unlocked by default
+switchGame('Banana Milkshake Game')           // Start with the first game unlocked by default
 requestAnimationFrame(animate)
